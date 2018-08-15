@@ -1,0 +1,64 @@
+vitaly1991
+Vitaly Frolov
+
+
+=============================
+=      README for ex11      =
+=============================
+
+==================
+=     Usage:     =
+==================
+
+import the priority_queue.py
+
+	   
+==================
+=  Description:  =
+==================
+
+implementation of a queue via a linked list
+in which each link is a node that contains a task
+
+=============================
+=  List of submitted files: =
+=============================
+
+README		This file
+
+node.py 
+
+priority_queue.py - implementation of a queue via a linked list
+					
+
+priority_queue_iterator.py - implementation of an iterator for priority_queue
+
+string_task.py - class which creates from a given priority and name of task 
+				 a new type which called StringTask
+
+======================
+=  Special Comments  =
+======================
+
+assignment 9:
+if we try to iterate again, nothing will happen because the self.__current is pointing
+to the end of the queue
+
+assignment 10:
+the difference is that I've added a field self.__stop
+and when the queue has reached its end, meaning has_stop function 
+returned False,then StopIteration exception is raised 
+
+
+assignment 12:
+the runtime of the function is O(n**2)
+the function iterates twice on each queue so its runtime is O(n)
+and each en queuing of a task takes runtime of O(n) at the worst scenario 
+
+
+assignment 13:
+the runtime of the function is O(n)
+because the function iterates over the queues once its runtime O(n)
+and each time its checks whether the task in each queue are equal and its runtime is O(1)  
+
+

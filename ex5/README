@@ -1,0 +1,28 @@
+vitaly1991
+Vitaly frolov
+
+
+=============================
+=      README for ex5       =
+=============================
+
+==================
+=  Description:  =
+==================
+
+A list of functions  that uses the Perceptron algorithm to create a
+weight vector and a bias from given data and labels
+and then uses them to on new data and labels 
+
+=============================
+=  List of submitted files: =
+=============================
+
+README This file
+
+perceptron.py 
+
+======================
+=  Special Comments  =
+======================
+none

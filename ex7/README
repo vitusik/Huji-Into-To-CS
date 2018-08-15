@@ -1,0 +1,31 @@
+vitaly1991
+Vitaly Frolov
+
+
+=============================
+=      README for ex7       =
+=============================
+
+
+usage: python3 gui.py <image_source> <image_target> <num_frames> <out_dir> 
+						<max_x> <max_y> 
+	   
+==================
+=  Description:  =
+==================
+
+a list of function that are the base of the morphing algorithm for images 
+
+=============================
+=  List of submitted files: =
+=============================
+
+README		This file
+
+ex7.py contains function's that are needed for the usage 
+
+======================
+=  Special Comments  =
+======================
+
+

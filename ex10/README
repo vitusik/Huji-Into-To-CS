@@ -1,0 +1,49 @@
+vitaly1991
+Vitaly Frolov
+
+
+=============================
+=      README for ex10      =
+=============================
+
+
+
+	   
+==================
+=  Description:  =
+==================
+
+a numbers game that can be played via the internet
+
+=============================
+=  List of submitted files: =
+=============================
+
+README		This file
+
+WordExtractor.py
+
+WordTracker.py
+
+PathScanner.py
+
+======================
+=  Special Comments  =
+======================
+
+contains:
+because of that function I used the Merge Sort algorithm
+and binary search algorithm so my runtime wouldn't surpass O(logn)
+
+encounter:
+runtime is O(logn) because og the binary search that I use in the beginning of the function
+even though there is a list change inside with runtime of n, because the length of the list
+was decided inside the constructor of the class then its runtime becomes O(1)
+
+encountered_all:
+runtime is O(n) because there are n iterations inside the function  
+
+reset:
+runtime is O(1) because the length of the list was calculated in the counter so the action inside 
+that function are list in the length of 1 multiplied by a constant 
+
