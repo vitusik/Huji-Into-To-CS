@@ -7,6 +7,7 @@
 
 from SolveLinear3 import solve_linear_3
 
+
 def is_point_inside_triangle(point, v1, v2, v3):
     """
     a function that checks if a given point is inside a triangle
@@ -27,17 +28,18 @@ def is_point_inside_triangle(point, v1, v2, v3):
     v3y = v3[1]
     px = point[0]
     py = point[1]
-    x = [v1x,v2x,v3x]
-    y = [v1y,v2y,v3y]
-    coefficient_list = [x,y,[1,1,1]]
-    right_hand_list = [px,py,1]
-    solution = solve_linear_3(coefficient_list,right_hand_list)
+    x = [v1x, v2x, v3x]
+    y = [v1y, v2y, v3y]
+    coefficient_list = [x, y, [1, 1, 1]]
+    right_hand_list = [px, py, 1]
+    solution = solve_linear_3(coefficient_list, right_hand_list)
     if (solution[0] < 0) or (solution[1] < 0) or (solution[2] < 0):
         # if either of the variables is smaller than 0 its means the point
         # isn't inside the triangle
-        return (False,solution)
+        return False, solution
     else:
-        return (True,solution)
+        return True, solution
+
 
 def create_base_triangles(list_of_points):
     """
@@ -48,11 +50,12 @@ def create_base_triangles(list_of_points):
              that are the x,y coordinate of the triangle edge
     """
     l = []
-    a = ((list_of_points[0]),(list_of_points[1]),(list_of_points[2]))
+    a = ((list_of_points[0]), (list_of_points[1]), (list_of_points[2]))
     l.append(a)
-    a = ((list_of_points[0]),(list_of_points[3]),(list_of_points[2]))
+    a = ((list_of_points[0]), (list_of_points[3]), (list_of_points[2]))
     l.append(a)
     return l
+
 
 def create_triangles(list_of_points):
     """
@@ -64,27 +67,26 @@ def create_triangles(list_of_points):
              that are the x,y coordinate of the triangle edge
     """
     l = create_base_triangles(list_of_points)
-    for i in range(4,len(list_of_points)):
+    for i in range(4, len(list_of_points)):
         found = False
         j = 0
         while (j <= len(l)) and (not found):
-            sol = is_point_inside_triangle(list_of_points[i],
-                                           l[j][0],l[j][1],l[j][2])
-            if(sol[0]):
+            sol = is_point_inside_triangle(list_of_points[i], l[j][0], l[j][1], l[j][2])
+            if sol[0]:
                 temp = l[j]
                 l.pop(j)
                 # the triangle needs to be removed because it contains
                 # a coordinate which means the triangle can be divided
                 # into 3 smaller triangles
-                l.insert(j,tuple(([temp[0],list_of_points[i],temp[1]])))
-                l.insert(j+1,tuple(([temp[0],list_of_points[i],temp[2]])))
-                l.insert(j+2,tuple(([temp[1],list_of_points[i],temp[2]])))
+                l.insert(j, tuple(([temp[0], list_of_points[i], temp[1]])))
+                l.insert(j+1, tuple(([temp[0], list_of_points[i], temp[2]])))
+                l.insert(j+2, tuple(([temp[1], list_of_points[i], temp[2]])))
                 found = True
                 # once the function created a set of 3 new triangles
                 # we can continue checking the next coordinate
             j += 1
 
-    return  l
+    return l
 
 
 def do_triangle_lists_match(list_of_points1, list_of_points2):
@@ -95,7 +97,7 @@ def do_triangle_lists_match(list_of_points1, list_of_points2):
     :return: true if each point in each list is the same corresponding
              triangle
     """
-    if (len(list_of_points1) != len(list_of_points2)):
+    if len(list_of_points1) != len(list_of_points2):
         # if the amount of points isn't the same there is no need
         # to check the triangles list
         return False
@@ -114,7 +116,7 @@ def do_triangle_lists_match(list_of_points1, list_of_points2):
                                             triangle_list2[j][0],
                                             triangle_list2[j][1],
                                             triangle_list2[j][2])
-            if (sol1[0] == sol2[0]):
+            if sol1[0] == sol2[0]:
                 # if A point in list1 and B point in list2 and they both
                 # either belong or not to their corresponding triangles
                 # than they match so we can continue to the next point
@@ -138,10 +140,10 @@ def get_point_in_segment(p1, p2, alpha):
     """
     vx = float((1 - alpha) * p1[0] + alpha * p2[0])
     vy = float((1 - alpha) * p1[1] + alpha * p2[1])
-    return (vx,vy)
+    return vx, vy
 
-def get_intermediate_triangles(source_triangles_list, target_triangles_list,
-                                                                  alpha):
+
+def get_intermediate_triangles(source_triangles_list, target_triangles_list, alpha):
     """
 
     :param source_triangles_list: list that contains triplets of tuples which
@@ -162,18 +164,13 @@ def get_intermediate_triangles(source_triangles_list, target_triangles_list,
         for j in range(3):
             xy_source = source_triangles_list[i][j]
             xy_target = target_triangles_list[i][j]
-            tri = get_point_in_segment(xy_source,xy_target,alpha)
+            tri = get_point_in_segment(xy_source, xy_target, alpha)
             inter_tri.append(tri)
         list_inter_tri.append(tuple(inter_tri))
-    return  list_inter_tri
+    return list_inter_tri
 
 
-
-# until here should be submitted by next week - 18.12.2014
-
-
-def get_array_of_matching_points(size,triangles_list ,
-                                 intermediate_triangles_list):
+def get_array_of_matching_points(size, triangles_list, intermediate_triangles_list):
     """
 
     :param size: tuple that contains the size of the image the first
@@ -195,22 +192,22 @@ def get_array_of_matching_points(size,triangles_list ,
     len_list = len(intermediate_triangles_list)
     tri_found = False
     triangle_list_index = 0
-    for i in range(size[0]):# runs on X axis
-        for j in range(size[1]):# runs on Y axis
+    for i in range(size[0]):  # runs on X axis
+        for j in range(size[1]):  # runs on Y axis
             while(not tri_found) and (triangle_list_index < len_list):
-                check = is_point_inside_triangle((i,j),
-                        intermediate_triangles_list[triangle_list_index][0],
-                        intermediate_triangles_list[triangle_list_index][1],
-                        intermediate_triangles_list[triangle_list_index][2])
-                if (check[0]):
+                check = is_point_inside_triangle((i, j),
+                                                 intermediate_triangles_list[triangle_list_index][0],
+                                                 intermediate_triangles_list[triangle_list_index][1],
+                                                 intermediate_triangles_list[triangle_list_index][2])
+                if check[0]:
                     # check[0] will be true when the given point
                     # is inside the given triangle
                     tri_found = True
                     # if a triangle was found there is no need
                     # to continue the while loop
-                    a,b,c = check[1]
+                    a, b, c = check[1]
                     triangle = triangles_list[triangle_list_index]
-                    tuple = calculate(triangle,a,b,c)
+                    tuple = calculate(triangle, a, b, c)
                     list_of_matching_points_y_axis.append(tuple)
                 else:
                     # if the point isn't in the given triangle
@@ -225,14 +222,16 @@ def get_array_of_matching_points(size,triangles_list ,
         list_of_matching_points_y_axis = []
     return list_of_matching_points
 
-def calculate(triangle,a,b,c):
+
+def calculate(triangle, a, b, c):
     """
     a function that calculates and returns (x,y) values while using the
      x,y values of the triangles edges and a,b,c which are the coefficients
     """
     x = triangle[0][0] * a + triangle[1][0] * b + triangle [2][0] * c
     y = triangle[0][1] * a + triangle[1][1] * b + triangle [2][1] * c
-    return (x,y)
+    return x, y
+
 
 def create_intermediate_image(alpha, size, source_image, target_image,
                               source_triangles_list, target_triangles_list):
@@ -257,10 +256,10 @@ def create_intermediate_image(alpha, size, source_image, target_image,
     image_y_axis = []
     image = []
     inter_tri_list = get_intermediate_triangles(source_triangles_list,
-                                                target_triangles_list,alpha)
-    l1 = get_array_of_matching_points(size,source_triangles_list,
+                                                target_triangles_list, alpha)
+    l1 = get_array_of_matching_points(size, source_triangles_list,
                                       inter_tri_list)
-    l2 = get_array_of_matching_points(size,target_triangles_list,
+    l2 = get_array_of_matching_points(size, target_triangles_list,
                                       inter_tri_list)
 
     for x in range(size[0]):
@@ -271,19 +270,19 @@ def create_intermediate_image(alpha, size, source_image, target_image,
             y_s = source_match_point[1]
             x_t = target_match_point[0]
             y_t = target_match_point[1]
-            s_rgb = source_image[x_s,y_s]
-            t_rgb = target_image[x_t,y_t]
+            s_rgb = source_image[x_s, y_s]
+            t_rgb = target_image[x_t, y_t]
             red = int((1 - alpha) * s_rgb[0] + alpha * t_rgb[0])
             green = int((1 - alpha) * s_rgb[1] + alpha * t_rgb[1])
             blue = int((1 - alpha) * s_rgb[2] + alpha * t_rgb[2])
-            image_y_axis.append((red,green,blue))
+            image_y_axis.append((red, green, blue))
         image.append(image_y_axis)
         image_y_axis = []
     return image
 
 
-def create_sequence_of_images(size, source_image, target_image, 
-                source_triangles_list, target_triangles_list, num_frames):
+def create_sequence_of_images(size, source_image, target_image,
+                              source_triangles_list, target_triangles_list, num_frames):
     """
 
     :param alpha: number between 0 and 1
@@ -306,9 +305,7 @@ def create_sequence_of_images(size, source_image, target_image,
     list_of_images = []
     for i in range(num_frames):
         alpha = float(i / (num_frames - 1))
-        list_of_images.append(create_intermediate_image(alpha,size,
-                              source_image,target_image,source_triangles_list,
-                              target_triangles_list))
+        list_of_images.append(create_intermediate_image(alpha, size, source_image,
+                                                        target_image, source_triangles_list,
+                                                        target_triangles_list))
     return list_of_images
-
-# until here should be submitted by 25.12.2014
