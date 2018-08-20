@@ -228,8 +228,8 @@ def calculate(triangle, a, b, c):
     a function that calculates and returns (x,y) values while using the
      x,y values of the triangles edges and a,b,c which are the coefficients
     """
-    x = triangle[0][0] * a + triangle[1][0] * b + triangle [2][0] * c
-    y = triangle[0][1] * a + triangle[1][1] * b + triangle [2][1] * c
+    x = triangle[0][0] * a + triangle[1][0] * b + triangle[2][0] * c
+    y = triangle[0][1] * a + triangle[1][1] * b + triangle[2][1] * c
     return x, y
 
 
