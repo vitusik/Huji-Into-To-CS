@@ -8,8 +8,16 @@ Vitaly Frolov
 
 
 usage: python3 gui.py <image_source> <image_target> <num_frames> <out_dir> 
-						<max_x> <max_y> 
-	   
+						<max_x> <max_y>
+
+default params:
+    image source - im1.jpg
+    image target - im2.jpg
+    num of frames - 4
+    out dir - "cur_dir/images"
+    max x - 500
+    max y - 350
+    all default params can be changed in the gui.py file
 ==================
 =  Description:  =
 ==================
