@@ -44,17 +44,17 @@ def is_point_inside_triangle(point, v1, v2, v3):
 def create_base_triangles(list_of_points):
     """
     function that creates the first two triangles that are formed from the
-    coordinates of the edges
+    coordinates of the edges of the images
     :param list_of_points: list of coordinates
     :return: list that contains two tuples, each tuple contains 3 tuples
              that are the x,y coordinate of the triangle edge
     """
-    l = []
-    a = ((list_of_points[0]), (list_of_points[1]), (list_of_points[2]))
-    l.append(a)
-    a = ((list_of_points[0]), (list_of_points[3]), (list_of_points[2]))
-    l.append(a)
-    return l
+    ret_list = []
+    first_triangle = ((list_of_points[0]), (list_of_points[1]), (list_of_points[2]))
+    ret_list.append(first_triangle)
+    second_triangle = ((list_of_points[0]), (list_of_points[3]), (list_of_points[2]))
+    ret_list.append(second_triangle)
+    return ret_list
 
 
 def create_triangles(list_of_points):
@@ -66,27 +66,25 @@ def create_triangles(list_of_points):
              than 2 tuples, each tuple contains 3 tuples
              that are the x,y coordinate of the triangle edge
     """
-    l = create_base_triangles(list_of_points)
+    ret_list = create_base_triangles(list_of_points)
     for i in range(4, len(list_of_points)):
         found = False
         j = 0
-        while (j <= len(l)) and (not found):
-            sol = is_point_inside_triangle(list_of_points[i], l[j][0], l[j][1], l[j][2])
+        while (j <= len(ret_list)) and (not found):
+            sol = is_point_inside_triangle(list_of_points[i], ret_list[j][0], ret_list[j][1], ret_list[j][2])
             if sol[0]:
-                temp = l[j]
-                l.pop(j)
-                # the triangle needs to be removed because it contains
-                # a coordinate which means the triangle can be divided
-                # into 3 smaller triangles
-                l.insert(j, tuple(([temp[0], list_of_points[i], temp[1]])))
-                l.insert(j+1, tuple(([temp[0], list_of_points[i], temp[2]])))
-                l.insert(j+2, tuple(([temp[1], list_of_points[i], temp[2]])))
+                temp = ret_list[j]
+                ret_list.pop(j)
+                # the triangle can be removed from the list and be replaced by three smaller ones
+                ret_list.insert(j, ((temp[0]), (list_of_points[i]), (temp[1])))
+                ret_list.insert(j + 1, ((temp[0]), (list_of_points[i]), (temp[2])))
+                ret_list.insert(j + 2, ((temp[1]), (list_of_points[i]), (temp[2])))
                 found = True
                 # once the function created a set of 3 new triangles
                 # we can continue checking the next coordinate
             j += 1
 
-    return l
+    return ret_list
 
 
 def do_triangle_lists_match(list_of_points1, list_of_points2):
@@ -191,10 +189,24 @@ def get_array_of_matching_points(size, triangles_list, intermediate_triangles_li
     list_of_matching_points_y_axis = []
     len_list = len(intermediate_triangles_list)
     tri_found = False
+    prev_found_index = -1
     triangle_list_index = 0
     for i in range(size[0]):  # runs on X axis
         for j in range(size[1]):  # runs on Y axis
             while(not tri_found) and (triangle_list_index < len_list):
+                # taking advantage of spatial locality, two neighboring pixels have high chance of being in the same
+                # triangle
+                if prev_found_index >= 0:
+                    check = is_point_inside_triangle((i, j), intermediate_triangles_list[prev_found_index][0],
+                                                     intermediate_triangles_list[prev_found_index][1],
+                                                     intermediate_triangles_list[prev_found_index][2])
+                    if check[0]:
+                        tri_found = True
+                        a, b, c = check[1]
+                        triangle = triangles_list[prev_found_index]
+                        rgb_tuple = calculate(triangle, a, b, c)
+                        list_of_matching_points_y_axis.append(rgb_tuple)
+                        continue
                 check = is_point_inside_triangle((i, j),
                                                  intermediate_triangles_list[triangle_list_index][0],
                                                  intermediate_triangles_list[triangle_list_index][1],
@@ -207,8 +219,9 @@ def get_array_of_matching_points(size, triangles_list, intermediate_triangles_li
                     # to continue the while loop
                     a, b, c = check[1]
                     triangle = triangles_list[triangle_list_index]
-                    tuple = calculate(triangle, a, b, c)
-                    list_of_matching_points_y_axis.append(tuple)
+                    prev_found_index = triangle_list_index
+                    rgb_tuple = calculate(triangle, a, b, c)
+                    list_of_matching_points_y_axis.append(rgb_tuple)
                 else:
                     # if the point isn't in the given triangle
                     # the function advances to the next triangle in the list
@@ -285,7 +298,6 @@ def create_sequence_of_images(size, source_image, target_image,
                               source_triangles_list, target_triangles_list, num_frames):
     """
 
-    :param alpha: number between 0 and 1
     :param size: tuple that contains the size of the image the first
                  parameter is the x value and the second is the y
     :param source_image: the source image, list of list of tuples, each tuple
